@@ -1,6 +1,6 @@
 ## Reverse-engineered Commodore +4 game "Treasure Island" by Greg Duddle published by Mr. Micro Ltd. in 1985.
 
-https://plus4world.powweb.com/software/Treasure_Island
+Game info: https://plus4world.powweb.com/software/Treasure_Island
 
 ## The game
 
@@ -41,4 +41,11 @@ To run the original unaltered game you can do that from Makefile as well with
 ```console
 $ make original
 ```
+
+## Used tools
+
+The whole reverse-engineering was done with excellent jc64dis https://github.com/ice00/jc64
+Thetreasure_island.dis file is also included in the repository so you can "continue" my work if there is something that I miss.
+
+
 
