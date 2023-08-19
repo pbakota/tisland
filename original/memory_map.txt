@@ -1,0 +1,111 @@
+   .break "if X == $03"      
+
+Sprite
+ 0 Actor
+ 1 Unused
+ 2 Pirate
+ 3 John Long Silver
+ 4 Unused
+ 5 Sword (Actor)
+ 6 Sword (Pirate)
+ 7 Pickable
+ 
+Direction
+ 0 Right
+ 1 Left
+ 2 Down
+ 3 Up
+ 
+Room flag
+ 7 Pirate in room
+ 6 Pirate has a sword
+ 5
+ 4
+ 3 Pickable item in the room
+ 2
+ 1
+ 0
+ 
+1510 Sprite 00 color
+1511 Sprite 01 color
+1512 Sprite 02 color
+1513 Sprite 03 color
+1514 Sprite 04 color
+1515 Sprite 05 color
+1516 Sprite 06 color
+1517 Sprite 07 color
+
+1b68 Pickable 00 color
+1b69 Pickable 01 color
+1b6a Pickable 02 color
+1b6b Pickable 03 color
+1b6c Pickable 04 color
+
+
+1900 Actor sword shift left 0
+1927 Actor sword shift left 2
+194e Actor sword shift left 4
+1975 Actor sword shift left 6
+
+1b00 Actor sword up
+1b27 Actor sword down
+
+1b80 Pickable item 0 (key)
+1bc0 Pickable item 1 (spade)
+1c00 Pickable item 2 (barrel)
+1c40 Pickable item 3 (skull)
+1c80 Pickable item 4 (cheese)
+
+
+1d00 Pirate frame 0
+1d40 Pirate frame 1
+1d80 Pirate frame 2
+1dc0 Pirate frame 3
+
+1e00 Actor sword shift right 0
+1e27 Actor sword shift right 2
+1e4e Actor sword shift right 4
+1e75 Actor sword shift right 6
+
+
+6000 Frame 00: Actor right 0
+6040 Frame 01: Actor right 1
+6080 Frame 02: John Silver right 0
+60c0 Frame 03: John Silver right 1
+6100 Frame 04: Actor+sword right 0
+6140 Frame 05: Actor+sword right 1
+6180 Frame 06: John Silver left 0
+61c0 Frame 07: John Silver left 1
+6200 Frame 08: Actor left 0
+6240 Frame 09: Actor left 1
+6280 Frame 10: John Silver down 0
+62c0 Frame 11: John Silver down 1
+6300 Frame 12: Actor+sword left 0
+6340 Frame 13: Actor+sword left 1
+6380 Frame 14: John Silver up 0
+63c0 Frame 15: John Silver up 1
+6400 Frame 16: Actor down 0
+6440 Frame 17: Actor down 1
+6480 Frame 18: 
+64c0 Frame 19: 
+6500 Frame 20: Actor+sword down 0
+6540 Frame 21: Actor+sword down 1
+6580 Frame 22: 
+65c0 Frame 23: 
+6600 Frame 24: Actor up 0
+6640 Frame 25: Actor up 1
+6680 Frame 26: 
+66c0 Frame 27: 
+6700 Frame 28: Actor+sword up 0
+6740 Frame 29: Actor+sword up 1
+6780 Frame 30: 
+67c0 Frame 31: 
+
+
+
+
+
+
+
+
+
