@@ -26,6 +26,7 @@
 #define SCORE_DIGITS (0x19a0-0x1001+2)
 #define COPYRIGHT_BITMAP (0x7B00-0x1001+2)
 #define ROOM_FLAGS (0x1560-0x1001+2)
+#define PICKABLE_POSITIONS (0x6480-0x1001+2)
 
 #define WINDOW_SIZE_X   1600
 #define WINDOW_SIZE_Y   900
@@ -378,6 +379,7 @@ void convert_tiles_and_sprites(){
     colors[c].b = b;
   }
   SDL_SetPaletteColors(surface->format->palette, colors, 0, 128);
+//  SDL_SetColorKey(surface,SDL_TRUE,SDL_MapRGB(surface->format, 0, 0, 0));
 
   convert_tiles(surface);
   convert_sprites(surface);
@@ -387,7 +389,7 @@ void convert_tiles_and_sprites(){
   
   /* create indexed colors surface */
   SDL_Surface *panel_surface = SDL_CreateRGBSurfaceWithFormat(0,64+2*8,168,8,SDL_PIXELFORMAT_INDEX8);
-  assert(surface != NULL);
+  assert(panel_surface != NULL);
 
   SDL_SetPaletteColors(panel_surface->format->palette, colors, 0, 128);
   convert_score_panel(panel_surface);
@@ -445,6 +447,30 @@ void draw_drawable(SDL_Texture** frames, Uint8 sprite_nr, int x, int y, int size
   SDL_RenderCopy(renderer, frames[sprite_nr], NULL, &d);
 }
 
+void draw_room2(int room_nr, int draw_x, int draw_y, int zoom){
+  Uint16 room_ptr = get_room_ptr(room_nr);
+
+  for(int y=0;y<6;++y){
+    for(int x=0;x<8;++x){
+      int tile = (int)*((prg_mem+room_ptr++)-0x1001+2);
+      draw_tile(tile, draw_x + zoom*x, draw_y + zoom*y, zoom); 
+    }
+  }
+
+  Uint8 flags = (Uint8)*((prg_mem+ROOM_FLAGS+room_nr));
+  if(flags&0x08){
+    Uint8 i = flags&0x07;
+    Uint8 p = (Uint8)*(prg_mem+PICKABLE_POSITIONS+room_nr);
+
+    int tx = 2*((p&0xf0)-8), ty = 2*(((p&0x0f)<<4)-8);
+    if(i == 5){ // sword
+      draw_drawable(&sprite_frames[32+4],4,draw_x + zoom*tx, draw_y + zoom*ty,zoom);
+    }else{
+      draw_drawable(pickable_frames,i,draw_x + tx, zoom*draw_y + zoom*ty,zoom);
+    }
+  }
+}
+
 void draw_room(int room_nr){
   Uint16 room_ptr = get_room_ptr(room_nr);
   textout(0, 6*64+8, white_color, "Room: %02d ($%02x) addr: $%04x", room_nr, room_nr, room_ptr);
@@ -453,6 +479,19 @@ void draw_room(int room_nr){
     for(int x=0;x<8;++x){
       int tile = (int)*((prg_mem+room_ptr++)-0x1001+2);
       draw_tile(tile, 64*x, 64*y, 64); 
+    }
+  }
+
+  Uint8 flags = (Uint8)*((prg_mem+ROOM_FLAGS+room_nr));
+  if(flags&0x08){
+    Uint8 i = flags&0x07;
+    Uint8 p = (Uint8)*(prg_mem+PICKABLE_POSITIONS+room_nr);
+
+    int tx = 2*((p&0xf0)-8), ty = 2*(((p&0x0f)<<4)-8);
+    if(i == 5){ // sword
+      draw_drawable(&sprite_frames[32+4],4,tx,ty,64);
+    }else{
+      draw_drawable(pickable_frames,i,tx,ty,64);
     }
   }
 }
@@ -468,6 +507,8 @@ void draw_minimap(){
     Uint16 room_ptr = get_room_ptr(room_nr);
     int startx = (room_nr%8)*8*zoom, starty=(room_nr/8)*6*zoom;
 
+    draw_room2(room_nr, 520+startx, starty, zoom);
+#if 0
     Uint16 p = room_ptr;
     for(int y=0;y<6;++y){
       for(int x=0;x<8;++x){
@@ -475,6 +516,7 @@ void draw_minimap(){
         draw_tile(tile, 520 + startx + zoom*x, starty + zoom*y, zoom); 
       }
     }
+#endif
   }
 
 	SDL_SetRenderDrawColor(renderer, 255,0,0, SDL_ALPHA_OPAQUE);
@@ -502,8 +544,8 @@ void draw_pickables(){
   for(int y=0;y<1;++y){
     for(int x=0;x<5;++x){
       int tx=520+64*x, ty=780+49*y;
-      draw_drawable(pickable_frames,y*5+x,tx,ty,48);
-      textout(tx, ty+36, white_color, "$%04x", pickable_addr[y*5+x]);
+      draw_drawable(pickable_frames,y*5+x,tx,ty,64);
+      textout(tx, ty+64, white_color, "$%04x", pickable_addr[y*5+x]);
     }
   }
 }
@@ -600,8 +642,11 @@ void draw_editor() {
     int off = cursor_y*8+cursor_x;
     Uint16 room_ptr = get_room_ptr(current_room);
     int tile = (int)*((prg_mem+room_ptr+off)-0x1001+2);
-    textout(0, 420, white_color, "cx:%2d, cy:%2d, offset: $%02x (%2d) tile: $%02x (%2d)",
+    textout(0, 409, white_color, "cx:%2d, cy:%2d, offset: $%02x (%2d) tile: $%02x (%2d)",
       cursor_x, cursor_y,off,off,tile,tile);
+
+    int gx = (current_room % 8)*8+cursor_x, gy = (current_room / 8)*6+cursor_y;
+    textout(0, 426, white_color, "Global x:%3d, Global y:%3d", gx,gy);
   }
 }
 

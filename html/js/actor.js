@@ -140,6 +140,7 @@ class Actor {
                 this.#game.music_03.addEventListener('ended', () => {
                     this.#halt = false;
                     this.#game.chest_found = true;
+                    this.#game.add_to_score(5);
                     this.#actor_sword = 0; // remove sword
                 }, { once: true });
                 this.#game.music_03.play();
@@ -171,7 +172,7 @@ class Actor {
             this.#t = 0;
             this.#f = (this.#f + 1) % 2;
         }
-        var old = this.#actor_y;
+        const old = this.#actor_y;
         this.#actor_y -= dt * Actor.SPEED;
         const zones = this.#game.zone.hit(this.#hitbox());
         if (zones.includes('wall')) {
@@ -187,7 +188,7 @@ class Actor {
             this.#t = 0;
             this.#f = (this.#f + 1) % 2;
         }
-        var old = this.#actor_y;
+        const old = this.#actor_y;
         this.#actor_y += dt * Actor.SPEED;
         const zones = this.#game.zone.hit(this.#hitbox());
         if (zones.includes('wall')) {

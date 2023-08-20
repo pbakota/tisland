@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<!--
+ Copyright (c) 2023 Peter Bakota
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<head>
+    <title>JTreasure Island +4</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+</head>
+
+<body>
+    <!-- code -->
+    <script src="js/map.js"></script>
+    <script src="js/util.js"></script>
+    <script>
+
+        // let start_room = 0x38;
+        // let start_x = 6;
+        // let start_y = 1;
+
+        // // calulcate global position for start
+        // let sx = ~~(start_room % 8) * 8 + start_x;
+        // let sy = ~~(start_room / 8) * 6 + start_y;
+
+        // let end_room = 0x3c;
+        // let end_x = 4;
+        // let end_y = 3;
+
+        // // calculate global position for target
+        // let ex = ~~(end_room % 8) * 8 + end_x;
+        // let ey = ~~(end_room / 8) * 6 + end_y;
+
+        let sx = 8;
+        let sy = 43;
+        // let ex = 5;
+        // let ey = 4;
+
+        let ex = 4+1;
+        let ey = 27;
+
+        console.log(`sx=${sx},sy=${sy} ex=${ex},ey=${ey}`);
+        let path = Util.path_finding(MAP, sx, sy, ex, ey);
+        console.log(path);
+
+    </script>
+</body>
+
+</html>

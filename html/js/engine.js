@@ -341,6 +341,7 @@ Input.KEY_SPACE = 'Space';
 Input.KEY_PGDOWN = 'PageDown';
 Input.KEY_PGUP = 'PageUp';
 Input.KEY_L = 'KeyL';
+Input.KEY_M = 'KeyM';
 
 class Sprite {
     // private

@@ -16,6 +16,7 @@ class Room {
     #pickable;
     #pirates; #pirate; #pirate_t; #pirate_hb;
     #map; #score_digits;
+    #gps_target; #gps; #gps_on; #gps_t;
 
     // ctor
     constructor(game) {
@@ -60,6 +61,17 @@ class Room {
             new Sprite(this.#graphics, 256 + 9 * 8, 136, 8, 8),
         ];
 
+        this.#gps = [
+            //left
+            new Sprite(this.#graphics, 256 + 16 * 0, 164, 16, 16),
+            // right
+            new Sprite(this.#graphics, 256 + 16 * 1, 164, 16, 16),
+            // up
+            new Sprite(this.#graphics, 256 + 16 * 2, 164, 16, 16),
+            // down
+            new Sprite(this.#graphics, 256 + 16 * 3, 164, 16, 16),
+        ];
+
         this.#pickable_points = [
             { p: 0x05, t: 'key' },
             { p: 0x02, t: 'spade' },
@@ -102,6 +114,9 @@ class Room {
             this.#pirate = 0;
             this.#pirate_t = 0;
         }
+
+        this.#gps_on = true;
+        this.#gps_t = 0;
     }
 
     #print_score = (ctx) => {
@@ -130,6 +145,12 @@ class Room {
                 this.#pirate = (this.#pirate + 1) % 4;
             }
         }
+
+        // this.#gps_t += dt;
+        // if (this.#gps_t > 0.0125) {
+        //     this.#gps_t = 0;
+        //     this.#gps_on = !this.#gps_on;
+        // }
     }
 
     check_hit = (room, actor) => {
@@ -175,8 +196,98 @@ class Room {
     show_chest = () => {
         // Show treasure chest on map
         this.#map[0].tiles[37] = 0x16;
+    }
+
+    open_the_gate = () => {
         // Open the gate to ship
         this.#map[32].tiles[28] = 0x00;
+    }
+
+    // check if the gate to the ship is open
+    is_gate_open = () => this.#map[32].tiles[28] == 0x00;
+
+    find_path = (room, actor) => {
+        if (!this.#game.use_gps_navigation) {
+            this.#gps_target = false;
+            return;
+        }
+
+        // find room's global position
+        const rx = ~~(room % 8) * 8;
+        const ry = ~~(room / 8) * 6;
+
+        // find actor's global position
+        const sx = rx + ~~(actor.x / 32);
+        const sy = ry + ~~(actor.y / 32);
+
+        // first find the path to the nearest pickable object ...
+        const result = new PriorityQueue((a, b) => b.length > a.length);
+        for (let r = 0; r < 64; ++r) {
+            // the room has pickable ?
+            if (this.#map[r].pickable) {
+                const p = this.#map[r].pickable_index;
+                // skip swords .. for now
+                if (p == 5) continue;
+                const px = (this.#pickable_positions[r].x * 16) - 8, py = (this.#pickable_positions[r].y * 16) - 8;
+                const tx = ~~(px / 32), ty = ~~(py / 32);
+                // calculate pickable global position
+                const ex = ~~(r % 8) * 8 + tx;
+                const ey = ~~(r / 8) * 6 + ty;
+                // find the nearest path
+                const path = Util.path_finding(this.#map, sx, sy, ex, ey);
+                if (path.length != 0) { // ignore if path could not be found (this should not happen!)
+                    result.push(path);
+                }
+            }
+        }
+
+        let path;
+        if (result.isEmpty()) {
+            if (!this.#game.chest_found) {
+                // ... if there is no pickable left, try the chest
+                path = Util.path_finding(this.#map, sx, sy, 6, 4);
+            } else if (this.is_gate_open()) {
+                // .. or try the gate to the ship if chest has been found
+                path = Util.path_finding(this.#map, sx, sy, 5, 27);
+            } else {
+                this.#gps_target = false; //we should not get here!
+                return;
+            }
+        } else {
+            path = result.pop();
+        }
+
+        for (let i = 0; i < path.length; ++i) {
+            // find the tile which is on the edge of the room
+            const tx = path[i].x, ty = path[i].y;
+            // console.log(`tx=${tx}, ty=${ty}`);
+            if (tx < rx || tx >= rx + 8 || ty < ry || ty >= ry + 6) {
+                if (i > 0) {
+                    const cx = path[i - 1].x;
+                    const cy = path[i - 1].y;
+                    // calculate room-tile position
+                    const x = cx % 8, y = cy % 6;
+                    let d = Actor.LEFT;
+                    if (cx < tx)
+                        d = Actor.LEFT;
+                    else if (cx > tx)
+                        d = Actor.RIGHT;
+                    else if (cy > ty)
+                        d = Actor.UP;
+                    else if (cy < ty)
+                        d = Actor.DOWN;
+
+                    // console.log(`cx=${cx}, cy=${cy}, x=${x}, y=${y}, d=${d}`);
+                    this.#gps_target = { x: x, y: y, d: d };
+                    return;
+
+                } else {
+                    // we are in the same room where the pickable is
+                }
+            }
+
+        }
+        this.#gps_target = false;
     }
 
     draw = (ctx, room) => {
@@ -191,7 +302,7 @@ class Room {
                     const ty = ~~(t / 8) * 32, tx = ~~(t % 8) * 32;
                     ctx.drawImage(this.#graphics, tx, ty, 32, 32, x * 32, y * 32, 32, 32);
                     if (t != 0) {
-                        var name='wall'
+                        var name = 'wall'
                         if (t == 0x16) {
                             name = 'chest';
                         }
@@ -216,12 +327,16 @@ class Room {
             this.#cached = true;
         }
 
+        if (this.#gps_target && this.#gps_on) {
+            this.#gps[this.#gps_target.d].draw(ctx, this.#gps_target.x * 32 + 8, this.#gps_target.y * 32 + 8);
+        }
+
         (this.#map[room].pickable && this.#pickable) && this.#pickable.draw(ctx, this.#pickable_hb.x, this.#pickable_hb.y);
         (this.#map[room].pirate && this.#pirates) && this.#pirates[this.#pirate].draw(ctx, this.#pirate_hb.x, this.#pirate_hb.y);
 
         this.#print_score(ctx);
 
-        // this.#map[room].pirate && Sprite.debug(ctx, this.#pirate_hb);
+        //this.#map[room].pirate && Sprite.debug(ctx, this.#pirate_hb);
 
         //this.#game.zone.debug(ctx);
     }

@@ -64,6 +64,8 @@ class ActionScene extends Scene {
         this.#pirate_sword = false;
         this.#pirate_sword_pos = false;
         this.#pirate_sword_range = 0;
+
+        this.#room.find_path(this.#current_room, this.#actor);
     }
 
     // Unused
@@ -81,6 +83,8 @@ class ActionScene extends Scene {
         //Delay until JLS enters the scene
         this.#jls_delay = (this.game.chest_found) ? 1000 : 0;
         this.#jls_active = false;
+
+        this.#room.find_path(this.#current_room, this.#actor);
     }
 
     // Save the Actor's previous position
@@ -237,7 +241,7 @@ class ActionScene extends Scene {
         if (this.#pirate_sword) {
             if (Sprite.aabb(this.#actor.hb, this.#sword_hb(this.#pirate_sword_pos))) {
                 this.#pirate_sword = false;
-                if (!this.game.cheat_is_on && this.#pirate_sword_range != 0) {
+                if (!this.game.superhero_jim && this.#pirate_sword_range != 0) {
                     this.#actor_die();
                 } else {
                     this.game.sfx_02.play();
@@ -252,7 +256,7 @@ class ActionScene extends Scene {
     #check_actor_collided = () => {
         switch (this.#room.check_hit(this.#current_room, this.#actor)) {
             case 'pirate':
-                if (!this.game.cheat_is_on) {
+                if (!this.game.superhero_jim) {
                     this.#actor_die();
                 }
                 break;
@@ -270,6 +274,7 @@ class ActionScene extends Scene {
                     case 'skull':
                         break;
                 }
+                this.#room.find_path(this.#current_room, this.#actor);
                 break;
             default:
                 break;
@@ -309,6 +314,9 @@ class ActionScene extends Scene {
                 this.#actor.go_down(dt);
             } else {
                 this.#actor.idle(dt);
+            }
+            if (this.game.chest_found && !this.#room.is_gate_open()) {
+                this.#room.open_the_gate();
             }
         }
 
@@ -350,7 +358,7 @@ class ActionScene extends Scene {
             if (this.#jls_active && !this.#actor.halt) {
                 if (this.#jls.chase(dt, this.#actor)) {
                     // the actor was caught by JLS
-                    if (!this.game.cheat_is_on) {
+                    if (!this.game.superhero_jim) {
                         this.#actor_die();
                     }
                 }

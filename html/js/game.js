@@ -12,6 +12,7 @@ class Game
     _zone; _game_over; _game_cheat_is_on; _cheat_char_index; _cheat_text; _game_success;
     _snapshot_char_index; _snapshot_text; _snapshot; _player_start_x; _player_start_y; _player_face; _game_level;
     _zone; _music_00; _music_01; _music_02; _music_03; _sfx_00; _sfx_01; _sfx_02; _sfx_03; #score; #chest_found;
+    #game_superhero_jim; #game_inteligent_jls; #game_use_gps_navigation;
 
     constructor() {
 
@@ -29,6 +30,10 @@ class Game
 
         this._game_over = false;
         this._game_success = false;
+
+        this.#game_superhero_jim = false;
+        this.#game_inteligent_jls = false;
+        this.#game_use_gps_navigation = false;
     }
 
     run = () => {
@@ -64,6 +69,18 @@ class Game
         });
         Object.defineProperty(this, 'cheat_is_on', {
             get: () => { return this._game_cheat_is_on; }
+        });
+        Object.defineProperty(this, 'superhero_jim', {
+            get: () => { return this.#game_superhero_jim; },
+            set: (value) => { this.#game_superhero_jim = value; },
+        });
+        Object.defineProperty(this, 'inteligent_jls', {
+            get: () => { return this.#game_inteligent_jls; },
+            set: (value) => { this.#game_inteligent_jls = value; },
+        });
+        Object.defineProperty(this, 'use_gps_navigation', {
+            get: () => { return this.#game_use_gps_navigation; },
+            set: (value) => { this.#game_use_gps_navigation = value; },
         });
         Object.defineProperty(this, 'snapshot_is_on', {
             get: () => { return this._game_snapshot_is_on; }
