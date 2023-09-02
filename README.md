@@ -52,7 +52,7 @@ The treasure_island.dis file is also included in the repository so you can "cont
 New game menu has been added, with options for cheat and to utilize the path finding algorithm to navigate user through the labyrinth.
 To enter the in game manu press 'M'.
 
-![Alt text](/screenshots/it_screenshot_006.png?raw=true "In game menu")
+![Alt text](/screenshots/ti_screenshot_006.png?raw=true "In game menu")
 
 The menu options are
 
