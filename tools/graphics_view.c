@@ -115,7 +115,7 @@ void myexit() {
 	SDL_Quit();
 }
 
-int textout(int x, int y, const SDL_Color textColor, const char *fmt, ...)
+void textout(int x, int y, const SDL_Color textColor, const char *fmt, ...)
 {
 	char buffer[256];
 	va_list va;
@@ -163,7 +163,7 @@ int init_sdl() {
 	}
 
 
-	font = TTF_OpenFontRW(SDL_RWFromConstMem(ibm_vga_8x16_ttf, ibm_vga_8x16_ttf_len), 1, 16.4f);
+	font = TTF_OpenFontRW(SDL_RWFromConstMem(ibm_vga_8x16_ttf, ibm_vga_8x16_ttf_len), 1, 16);
 	if( font == NULL )
     {
     printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
@@ -716,7 +716,7 @@ void make_atlas_bitmap(){
   const int atlas_width=512, atlas_height=416, size=32;
   SDL_RendererInfo info;
   SDL_GetRendererInfo(renderer, &info);
-  assert(info.flags&SDL_RENDERER_TARGETTEXTURE!=0);
+  assert((info.flags&SDL_RENDERER_TARGETTEXTURE)!=0);
 
   SDL_Texture* atlas = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBX8888, 
     SDL_TEXTUREACCESS_STATIC|SDL_TEXTUREACCESS_TARGET, atlas_width, atlas_height);
@@ -1006,7 +1006,7 @@ int main(int ac, char **av) {
 		return 1;
 	}
 
-	if(!prg_file) {
+	if(!prg_file[0]) {
 		fprintf(stderr, "[E] Treasure Island prg image is not provided\n");
 		usage(av[0]);
 		return 1;

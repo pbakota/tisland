@@ -7,7 +7,7 @@ FONT=ibm_vga_8x16
 all: graphics_view
 
 graphics_view : graphics_view.c $(FONT).h
-	gcc -g $(CFLAGS) graphics_view.c -o graphics_view $(LIBS)
+	clang -g $(CFLAGS) graphics_view.c -o graphics_view $(LIBS)
 
 $(FONT).h : $(FONT).ttf
 	xxd -i $(FONT).ttf $(FONT).h

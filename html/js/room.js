@@ -85,6 +85,7 @@ class Room {
 
         // deep copy of the MAP array (is there any better way?)
         this.#map = JSON.parse(JSON.stringify(MAP));
+        this.#game.map = this.#map;
     }
 
     enter = (room) => {
@@ -207,11 +208,6 @@ class Room {
     is_gate_open = () => this.#map[32].tiles[28] == 0x00;
 
     find_path = (room, actor) => {
-        if (!this.#game.use_gps_navigation) {
-            this.#gps_target = false;
-            return;
-        }
-
         // find room's global position
         const rx = ~~(room % 8) * 8;
         const ry = ~~(room / 8) * 6;
@@ -267,10 +263,10 @@ class Room {
                     const cy = path[i - 1].y;
                     // calculate room-tile position
                     const x = cx % 8, y = cy % 6;
-                    let d = Actor.LEFT;
-                    if (cx < tx)
+                    let d;
+                    if (cx > tx)
                         d = Actor.LEFT;
-                    else if (cx > tx)
+                    else if (cx < tx)
                         d = Actor.RIGHT;
                     else if (cy > ty)
                         d = Actor.UP;
@@ -285,7 +281,6 @@ class Room {
                     // we are in the same room where the pickable is
                 }
             }
-
         }
         this.#gps_target = false;
     }

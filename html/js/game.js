@@ -12,7 +12,7 @@ class Game
     _zone; _game_over; _game_cheat_is_on; _cheat_char_index; _cheat_text; _game_success;
     _snapshot_char_index; _snapshot_text; _snapshot; _player_start_x; _player_start_y; _player_face; _game_level;
     _zone; _music_00; _music_01; _music_02; _music_03; _sfx_00; _sfx_01; _sfx_02; _sfx_03; #score; #chest_found;
-    #game_superhero_jim; #game_inteligent_jls; #game_use_gps_navigation;
+    #game_superhero_jim; #game_inteligent_jls; #game_use_gps_navigation; #map;
 
     constructor() {
 
@@ -95,6 +95,10 @@ class Game
         Object.defineProperty(this, 'chest_found', {
             get: () => { return this.#chest_found; },
             set: (value) => { this.#chest_found = value; },
+        });
+        Object.defineProperty(this, 'map', {
+            get: () => { return this.#map; },
+            set: (value) => { this.#map = value; },
         });
 
         this._cheat_char_index = 0;

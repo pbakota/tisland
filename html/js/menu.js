@@ -87,7 +87,7 @@ class Menu {
         this.#font.print(ctx, this.#origin_x + 200, this.#origin_y + 48 + 0 * 9, (this.#game.superhero_jim ? "yes" : "no"));
         this.#font.print(ctx, this.#origin_x + 20, this.#origin_y + 48 + 1 * 9, "inteligent j.l.s");
         this.#font.print(ctx, this.#origin_x + 200, this.#origin_y + 48 + 1 * 9, (this.#game.inteligent_jls ? "yes" : "no"));
-        this.#font.print(ctx, this.#origin_x + 20, this.#origin_y + 48 + 2 * 9, "show gps navigation");
+        this.#font.print(ctx, this.#origin_x + 20, this.#origin_y + 48 + 2 * 9, "use gps navigation");
         this.#font.print(ctx, this.#origin_x + 200, this.#origin_y + 48 + 2 * 9, (this.#game.use_gps_navigation ? "yes" : "no"));
 
         this.#font.print(ctx, this.#origin_x + 20, this.#origin_y + 48 + 4 * 9, "back to game");

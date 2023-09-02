@@ -65,7 +65,15 @@ class ActionScene extends Scene {
         this.#pirate_sword_pos = false;
         this.#pirate_sword_range = 0;
 
-        this.#room.find_path(this.#current_room, this.#actor);
+        if (this.game.use_gps_navigation) {
+            this.#room.find_path(this.#current_room, this.#actor);
+        }
+
+        // DEBUG
+        // this.#room.show_chest();
+        // this.#room.open_the_gate();
+        // this.game.chest_found = true;
+        // END OF DEBUG
     }
 
     // Unused
@@ -84,7 +92,9 @@ class ActionScene extends Scene {
         this.#jls_delay = (this.game.chest_found) ? 1000 : 0;
         this.#jls_active = false;
 
-        this.#room.find_path(this.#current_room, this.#actor);
+        if (this.game.use_gps_navigation) {
+            this.#room.find_path(this.#current_room, this.#actor);
+        }
     }
 
     // Save the Actor's previous position
@@ -193,7 +203,7 @@ class ActionScene extends Scene {
             // console.log(`X=${this.#pirate_sword_pos.x}, R=${this.#pirate_sword_range}`);
 
             // limit the range
-            if (~~Math.abs(this.#pirate_sword_range - this.#pirate_sword_pos.x) <= 0) {
+            if (~~Math.abs(this.#pirate_sword_range - this.#pirate_sword_pos.x) == 0) {
                 this.#pirate_sword_range = 0;
             }
 
@@ -274,7 +284,10 @@ class ActionScene extends Scene {
                     case 'skull':
                         break;
                 }
-                this.#room.find_path(this.#current_room, this.#actor);
+                if (this.game.use_gps_navigation) {
+                    // find next pickable or the target if this was the last pickable
+                    this.#room.find_path(this.#current_room, this.#actor);
+                }
                 break;
             default:
                 break;
@@ -283,7 +296,7 @@ class ActionScene extends Scene {
 
     // Update scene
     update = (dt) => {
-        // Exit to tite scene if Esc key is pressed
+        // Exit to title scene if Esc key is pressed
         if (this.#input.isPressed(Input.KEY_ESCAPE)) {
             this.game.setNextScene(Game.TITLE_SCENE);
             return;
@@ -297,8 +310,7 @@ class ActionScene extends Scene {
             if (this.#jls_delay < 0) {
                 // JLS enters the scene
                 this.#jls_active = true;
-                this.#jls.x = this.#actor_next_x;
-                this.#jls.y = this.#actor_next_y;
+                this.#jls.init(this.#current_room, this.#actor, this.#actor_next_x, this.#actor_next_y);
             }
         }
 
@@ -355,8 +367,8 @@ class ActionScene extends Scene {
             this.#check_actor_collided();
 
             // chase the actor ;-)
-            if (this.#jls_active && !this.#actor.halt) {
-                if (this.#jls.chase(dt, this.#actor)) {
+            if (this.#jls_active && !this.#actor.halt && this.#jls_delay < 0) {
+                if (this.#jls.chase(dt, this.#current_room, this.#actor)) {
                     // the actor was caught by JLS
                     if (!this.game.superhero_jim) {
                         this.#actor_die();

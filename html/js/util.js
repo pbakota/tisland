@@ -128,7 +128,7 @@ Util.path_finding = (rooms, start_x, start_y, end_x, end_y) => {
     map[y][x].p_x = x;
     map[y][x].p_y = y;
 
-    let open = new PriorityQueue((a,b) => b.h > a.h);
+    let open = new PriorityQueue((a, b) => b.h > a.h);
     open.push(map[y][x]);
 
     let destination_found = false;
@@ -200,3 +200,18 @@ Util.path_finding = (rooms, start_x, start_y, end_x, end_y) => {
     return make_path(map, end_x, end_y);
 }
 
+// Linear interpolation
+Util.lerp = (start, end, t) => start * (1 - t) + end * t;
+
+// Draw path for debugging purpose
+Util.path_debug = (ctx, path) => {
+    ctx.save();
+    ctx.lineWidth = 3;
+    for (let i = 0; i < path.length; ++i) {
+        ctx.strokeStyle = (i == 0 ? 'white' : 'green');
+        ctx.beginPath();
+        ctx.rect(32 * (path[i].x % 8), 32 * (path[i].y % 6), 32, 32);
+        ctx.stroke();
+    }
+    ctx.restore();
+}
