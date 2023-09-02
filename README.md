@@ -5,7 +5,6 @@ Game info: https://plus4world.powweb.com/software/Treasure_Island
 ## The game
 
 The repository contains all the reverse-engineered data for the game. Also, there is a new HTML5 re-implementation that can be played in any modern browser. The JS implementation does not use any game engine, everything is in plain "modern" Javascript.
-There is also a game menu where you can choose between various options for the game, including a GPS ;-) navigation and a cheat mode called superhero Jim. To enter menu press "M".
 
 Please take a look at the screen shots from the game:
 
@@ -50,12 +49,17 @@ The treasure_island.dis file is also included in the repository so you can "cont
 
 ## Additional features
 
-New game menu has been added, with options for cheat and to utilize the shortest-path algorithm to navigate user through the labyrinth.
+New game menu has been added, with options for cheat and to utilize the path finding algorithm to navigate user through the labyrinth.
+To enter the in game manu press 'M'.
 
-![Alt text](/screenshots/gw_screenshot_006.png?raw=true "In game menu")
+![Alt text](/screenshots/it_screenshot_006.png?raw=true "In game menu")
 
 The menu options are
-- "SUPERHERO JIM" = To make Jim to be a super hero capabilities
+
+- "SUPERHERO JIM"       = To make Jim a superhero capabilities
+- "INTELIGENT J.L.S"    = John Long Silver also uses path finding to find the actor
+- "USE GPS NAVIGATION"  = To mark in the room the exit where the actor should go to the next target. First the actor will be navigated to the nearest pickable,
+                          If there is no more pickable items, then the actor will be navigated to the treasure chest and after that to the ship.
 
 
 
