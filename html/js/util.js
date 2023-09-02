@@ -1,3 +1,8 @@
+// Copyright (c) 2023 Peter Bakota
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
 "use strict";
 
 // inspired by https://stackoverflow.com/questions/42919469/efficient-way-to-implement-priority-queue-in-javascript (gyre answer)

@@ -6,6 +6,17 @@ Game info: https://plus4world.powweb.com/software/Treasure_Island
 
 The repository contains all the reverse-engineered data for the game. Also, there is a new HTML5 re-implementation that can be played in any modern browser. The JS implementation does not use any game engine, everything is in plain "modern" Javascript.
 
+The HTML version can be found in "HTML" folder. To control the actor plase use these keys:
+
+- CURSOR LEFT   = To move actor left
+- CURSOR RIGHT  = To move actor right
+- CURSOR UP     = To move actor up
+- CURSOR DOWN   = To move actor down
+- SPACE BAR     = To fire sword (if available)
+
+The online version of the game is available at
+http://coderbug.rs/treasure_island
+
 Please take a look at the screen shots from the game:
 
 ![Alt text](/screenshots/ti_screenshot_001.png?raw=true "Screenshot1")
