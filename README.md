@@ -56,7 +56,7 @@ To enter the in game manu press 'M'.
 
 The menu options are
 
-- "SUPERHERO JIM"       = To make Jim a superhero capabilities
+- "SUPERHERO JIM"       = To make Jim a superhero
 - "INTELIGENT J.L.S"    = John Long Silver also uses path finding to find the actor
 - "USE GPS NAVIGATION"  = To mark in the room the exit where the actor should go to the next target. First the actor will be navigated to the nearest pickable,
                           If there is no more pickable items, then the actor will be navigated to the treasure chest and after that to the ship.
