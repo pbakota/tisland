@@ -2,6 +2,8 @@
 
 Game info: https://plus4world.powweb.com/software/Treasure_Island
 
+Play the game online: https://pbakota.github.io/tisland/html/
+
 ## The game
 
 The repository contains all the reverse-engineered data for the game. Also, there is a new HTML5 re-implementation that can be played in any modern browser. The JS implementation does not use any game engine, everything is in plain "modern" Javascript.
